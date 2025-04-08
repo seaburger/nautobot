@@ -97,6 +97,12 @@ TREE_LINK = """
 <a href="{{ record.get_absolute_url }}">{{ record.name }}</a>
 """
 
+# Separate TREE_LINK_HIERARCHY since LocationType uses NautobotUIViewSet which doesn't leverage ObjectListHeirarchyView
+TREE_LINK_HIERARCHY = """
+{% load helpers %}
+{% tree_hierarchy_ui_representation filtered_ancestor_count|as_range table.hide_hierarchy_ui %}
+<a href="{{ record.get_absolute_url }}">{{ record.name }}</a>
+"""
 
 POWERFEED_CABLE = """
 <a href="{{ value.get_absolute_url }}">{{ value }}</a>

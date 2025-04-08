@@ -301,7 +301,7 @@ class RIRUIViewSet(NautobotUIViewSet):
 #
 
 
-class PrefixListView(generic.ObjectListView):
+class PrefixListView(generic.ObjectListHeirarchyView):
     filterset = filters.PrefixFilterSet
     filterset_form = forms.PrefixFilterForm
     table = tables.PrefixDetailTable

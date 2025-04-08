@@ -261,8 +261,9 @@ class ObjectListView(ObjectPermissionRequiredMixin, View):
             # If a valid filterset is applied, we have to hide the hierarchy indentation in the UI for tables that support hierarchy indentation.
             # NOTE: An empty filterset query-param is also valid filterset and we dont want to hide hierarchy indentation if no filter query-param is provided
             #      hence `filterset.data`.
+            # Filtering can be done without hiding hierarchy indendation.
             if filterset.is_valid() and filterset.data:
-                hide_hierarchy_ui = True
+                hide_hierarchy_ui = False
 
             display_filter_params = [
                 check_filter_for_display(filterset.filters, field_name, values)
@@ -1546,3 +1547,12 @@ class BulkComponentCreateView(GetReturnURLMixin, ObjectPermissionRequiredMixin, 
                 "return_url": self.get_return_url(request),
             },
         )
+
+class ObjectListHeirarchyView(ObjectListView):
+    def extra_context(self):
+        filter_params = self.get_filter_params(self.request)
+        filterset = self.filterset(filter_params, self.queryset)
+        return {
+            "cur_filter": filterset,
+            **super().extra_context(),
+        }

@@ -9,6 +9,7 @@ from nautobot.core.tables import (
     LinkedCountColumn,
     TagColumn,
     ToggleColumn,
+    TreeTemplateColumn
 )
 from nautobot.core.templatetags.helpers import render_boolean
 from nautobot.dcim.models import Interface
@@ -47,7 +48,7 @@ UTILIZATION_GRAPH = """
 # object: the base ancestor Prefix, in the case of PrefixDetailTable, else None
 PREFIX_COPY_LINK = """
 {% load helpers %}
-{% tree_hierarchy_ui_representation record.ancestors.count|as_range table.hide_hierarchy_ui base_tree_depth|default:0 %}
+{% tree_hierarchy_ui_representation filtered_ancestor_count|as_range table.hide_hierarchy_ui base_tree_depth|default:0 %}
 <span class="hover_copy">
   <a href="\
 {% if record.present_in_database %}\
@@ -351,7 +352,7 @@ class RIRTable(BaseTable):
 
 class PrefixTable(StatusTableMixin, RoleTableMixin, BaseTable):
     pk = ToggleColumn()
-    prefix = tables.TemplateColumn(
+    prefix = TreeTemplateColumn(
         template_code=PREFIX_COPY_LINK, attrs={"td": {"class": "text-nowrap"}}, order_by=("network", "prefix_length")
     )
     vrf_count = LinkedCountColumn(

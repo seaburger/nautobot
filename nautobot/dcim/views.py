@@ -251,7 +251,7 @@ class LocationTypeUIViewSet(NautobotUIViewSet):
 #
 
 
-class LocationListView(generic.ObjectListView):
+class LocationListView(generic.ObjectListHeirarchyView):
     queryset = Location.objects.all()
     filterset = filters.LocationFilterSet
     filterset_form = forms.LocationFilterForm
@@ -490,7 +490,7 @@ class MigrateLocationDataToContactView(generic.ObjectEditView):
 #
 
 
-class RackGroupListView(generic.ObjectListView):
+class RackGroupListView(generic.ObjectListHeirarchyView):
     queryset = RackGroup.objects.all()
     filterset = filters.RackGroupFilterSet
     filterset_form = forms.RackGroupFilterForm

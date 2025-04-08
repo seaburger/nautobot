@@ -7,12 +7,13 @@ from nautobot.core.tables import (
     LinkedCountColumn,
     TagColumn,
     ToggleColumn,
+    TreeTemplateColumn
 )
 from nautobot.dcim.models import Rack, RackGroup, RackReservation
 from nautobot.extras.tables import RoleTableMixin, StatusTableMixin
 from nautobot.tenancy.tables import TenantColumn
 
-from .template_code import RACKGROUP_ELEVATIONS, TREE_LINK, UTILIZATION_GRAPH
+from .template_code import RACKGROUP_ELEVATIONS, TREE_LINK_HIERARCHY, UTILIZATION_GRAPH
 
 __all__ = (
     "RackDetailTable",
@@ -29,7 +30,7 @@ __all__ = (
 
 class RackGroupTable(BaseTable):
     pk = ToggleColumn()
-    name = tables.TemplateColumn(template_code=TREE_LINK, attrs={"td": {"class": "text-nowrap"}})
+    name = TreeTemplateColumn(template_code=TREE_LINK_HIERARCHY, attrs={"td": {"class": "text-nowrap"}})
     location = tables.Column(linkify=True)
     rack_count = LinkedCountColumn(
         viewname="dcim:rack_list",

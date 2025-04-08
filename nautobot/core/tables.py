@@ -723,3 +723,25 @@ class RelationshipColumn(django_tables2.Column):
             v = value[0]
             peer = v.get_peer(record)
             return format_html('<a href="{}">{}</a>', peer.get_absolute_url(), peer)
+
+class TreeTemplateColumn(django_tables2.TemplateColumn):
+    """
+    Fetch count of parent objects that are shown with current filterset.
+    Use this value to dynamically indent items for heirarchy_ui/treeview.  This allows for tree view
+    even when filtering a table.  Sorting still triggers hiding the heirarchy_ui/treeview.
+    """
+    def render(self, record, table, value, bound_column, **kwargs):
+        try:
+            context = table.context
+        except AttributeError:
+            context = None
+        
+        if context:
+            cur_filter = context.get('cur_filter', None)
+            if cur_filter and cur_filter.is_valid() and cur_filter.data:
+                filtered_ancestor_count = table.context['cur_filter'].filter_queryset(record.ancestors()).count()
+            else:
+                filtered_ancestor_count = record.ancestors().count()
+            table.context.update({"filtered_ancestor_count": filtered_ancestor_count})
+        
+        return super().render(record, table, value, bound_column, **kwargs)
